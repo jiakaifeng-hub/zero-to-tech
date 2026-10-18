@@ -9,8 +9,13 @@ from datetime import datetime, timezone
 from storage import init_db,save_record, get_history      # ← 新增：跟存储层打交道，只经过这一行
 import uuid
 from fastapi import Request, Response
+import os
+from dotenv import load_dotenv
 
 
+
+load_dotenv()
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS").split(",")
 
 
 
@@ -18,12 +23,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=ALLOWED_ORIGINS,   # 不在写死 ，从配置文件加载
     allow_methods=["GET", "POST"],
     allow_credentials=True,          # ← 新增：允许跨源请求带上 cookie
 )
 
-init_db() 
+init_db()   
 
 
 
